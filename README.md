@@ -40,4 +40,21 @@ job.OnSuccess(func(thisJob *cronmgr.Job) {
 job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
     // ...
 })
+```## add once job
+
+```go
+execTime := time.Now().Add(time.Duration(10) * time.Second)
+job, err := jobMater.AddOnceJob("test-job-success", execTime, func(thisJob *cronmgr.Job) error {
+    fmt.Println(time.Now(), thisJob.ID, "run")
+    return nil
+})
+if err != nil {
+    panic(err)
+}
+job.OnSuccess(func(thisJob *cronmgr.Job) {
+    // ...
+})
+job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
+    // ...
+})
 ```
