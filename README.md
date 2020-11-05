@@ -1,20 +1,20 @@
 # cron mgr
 
-```golang
+```go
 type IJobMgr interface {
-	AddOnceJob(desc string, nextTime time.Time, runFunc jobFunc) (*Job, error)
-	AddJob(desc string, spec string, runFunc jobFunc) (*Job, error)
-	DelJob(id string)
-	GetJob(id string) *Job
-	GetJobList() []*Job
+    AddOnceJob(desc string, nextTime time.Time, runFunc jobFunc) (*Job, error)
+    AddJob(desc string, spec string, runFunc jobFunc) (*Job, error)
+    DelJob(id string)
+    GetJob(id string) *Job
+    GetJobList() []*Job
 }
 type IJob interface {
-	GetEntity() cron.Entry
-	OnFail(f jobFailFunc)
-	OnSuccess(f jobSuccessFunc)
-	AddBeforeFunc(f jobFunc)
-	AddAfterFunc(f jobFunc)
-	Run()
+    GetEntity() cron.Entry
+    OnFail(f jobFailFunc)
+    OnSuccess(f jobSuccessFunc)
+    AddBeforeFunc(f jobFunc)
+    AddAfterFunc(f jobFunc)
+    Run()
 }
 ```
 
@@ -22,8 +22,7 @@ type IJob interface {
 ## basic
 
 ```go
-	jobMater = cronmgr.NewJobMgr(&cronmgr.JobMgrOption{})
-    
+jobMater = cronmgr.NewJobMgr(&cronmgr.JobMgrOption{})
 ```
 ## add repeat job
 
