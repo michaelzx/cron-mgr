@@ -28,17 +28,17 @@ type IJob interface {
 ## add repeat job
 
 ```go
-	job, err := jobMater.AddJob("test-job-repeat", "*/5 * * * * ?", func(thisJob *cronmgr.Job) error {
-		fmt.Println(time.Now(), thisJob.ID, "run")
-		return nil
-	})
-	if err != nil {
-		panic(err)
-	}
-	job.OnSuccess(func(thisJob *cronmgr.Job) {
-		// ...
-	})
-	job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
-		// ...
-	})
+job, err := jobMater.AddJob("test-job-repeat", "*/5 * * * * ?", func(thisJob *cronmgr.Job) error {
+    fmt.Println(time.Now(), thisJob.ID, "run")
+    return nil
+})
+if err != nil {
+    panic(err)
+}
+job.OnSuccess(func(thisJob *cronmgr.Job) {
+    // ...
+})
+job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
+    // ...
+})
 ```
