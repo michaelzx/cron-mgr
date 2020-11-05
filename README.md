@@ -40,7 +40,8 @@ job.OnSuccess(func(thisJob *cronmgr.Job) {
 job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
     // ...
 })
-```## add once job
+```
+## add once job
 
 ```go
 execTime := time.Now().Add(time.Duration(10) * time.Second)
