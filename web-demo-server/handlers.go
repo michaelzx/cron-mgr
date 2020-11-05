@@ -20,6 +20,12 @@ func createRepeat(ctx *fiber.Ctx) error {
 	if err != nil {
 		panic(err)
 	}
+	job.OnSuccess(func(thisJob *cronmgr.Job) {
+		// ...
+	})
+	job.OnFail(func(thisJob *cronmgr.Job, jobErr error) {
+		// ...
+	})
 	return ctx.JSON(job)
 }
 
