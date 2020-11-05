@@ -10,22 +10,24 @@ var jobMater *cronmgr.JobMgr
 
 func main() {
 
-	logInfo := make(chan string)
-	logError := make(chan error)
+	opt := &cronmgr.JobMgrOption{
+		LogInfo:  make(chan string),
+		LogError: make(chan error),
+	}
+
+	jobMater = cronmgr.NewJobMgr(opt)
 
 	go func() {
 		for {
 			select {
-			case s := <-logInfo:
+			case s := <-opt.LogInfo:
 				fmt.Println("info---->", s)
-			case e := <-logError:
+			case e := <-opt.LogError:
 				fmt.Println("error---->", e)
 				fmt.Printf("%+v", e)
 			}
 		}
 	}()
-	jobMater = cronmgr.NewJobMgr(logInfo, logError)
-
 	runWebServer()
 }
 

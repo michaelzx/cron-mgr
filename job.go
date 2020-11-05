@@ -92,18 +92,18 @@ func (j *Job) run() {
 	defer func() {
 		if err := recover(); err != nil {
 			if e, ok := err.(error); ok {
-				fmt.Println("recover is error")
+				// fmt.Println("recover is error")
 				if j.failFunc != nil {
-					fmt.Println("failFunc is not nil")
+					// fmt.Println("failFunc is not nil")
 					j.failFunc(j, e)
 				} else {
-					fmt.Println("failFunc is nil")
+					// fmt.Println("failFunc is nil")
 					if j.mgr.logError != nil {
-						fmt.Println("logError is not nil")
+						// fmt.Println("LogError is not nil")
 						j.mgr.logError <- errors.Wrap(e, "job fail without failFunc")
 					} else {
-						fmt.Println("logError is nil")
-						fmt.Println("job fail without failFunc", e)
+						// fmt.Println("LogError is nil")
+						// fmt.Println("job fail without failFunc", e)
 					}
 				}
 			} else {

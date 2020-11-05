@@ -30,8 +30,12 @@ type JobMgr struct {
 	logInfo  chan string
 	logError chan error
 }
+type JobMgrOption struct {
+	LogInfo  chan string
+	LogError chan error
+}
 
-func NewJobMgr(logInfo chan string, logError chan error) *JobMgr {
+func NewJobMgr(opt *JobMgrOption) *JobMgr {
 	var options []cron.Option
 	options = append(options, cron.WithSeconds())
 	c := cron.New(options...)
@@ -39,8 +43,8 @@ func NewJobMgr(logInfo chan string, logError chan error) *JobMgr {
 	return &JobMgr{
 		cron:     c,
 		jobMap:   make(map[string]*Job),
-		logInfo:  logInfo,
-		logError: logError,
+		logInfo:  opt.LogInfo,
+		logError: opt.LogError,
 	}
 }
 
