@@ -9,18 +9,18 @@ import (
 )
 
 type IJobMgr interface {
-	AddOnceJob(desc string, nextTime time.Time, runFunc jobFunc) (*Job, error)
-	AddJob(desc string, spec string, runFunc jobFunc) (*Job, error)
+	AddOnceJob(desc string, nextTime time.Time, runFunc JobFunc) (*Job, error)
+	AddJob(desc string, spec string, runFunc JobFunc) (*Job, error)
 	DelJob(id string)
 	GetJob(id string) *Job
 	GetJobList() []*Job
 }
 type IJob interface {
 	GetEntity() cron.Entry
-	OnFail(f jobFailFunc)
-	OnSuccess(f jobSuccessFunc)
-	AddBeforeFunc(f jobFunc)
-	AddAfterFunc(f jobFunc)
+	OnFail(f JobFailFunc)
+	OnSuccess(f JobSuccessFunc)
+	AddBeforeFunc(f JobFunc)
+	AddAfterFunc(f JobFunc)
 	Run()
 }
 type JobMgr struct {
@@ -59,7 +59,7 @@ func (mgr *JobMgr) DelJob(id string) {
 	mgr.cron.Remove(job.EntityID)
 }
 
-func (mgr *JobMgr) AddOnceJob(desc string, nextTime time.Time, runFunc jobFunc) (*Job, error) {
+func (mgr *JobMgr) AddOnceJob(desc string, nextTime time.Time, runFunc JobFunc) (*Job, error) {
 	if nextTime.Before(time.Now()) {
 		return nil, errors.New("job already expired")
 	}
@@ -82,7 +82,7 @@ func (mgr *JobMgr) AddOnceJob(desc string, nextTime time.Time, runFunc jobFunc) 
 	mgr.jobMap[job.ID] = job
 	return job, nil
 }
-func (mgr *JobMgr) AddJob(desc string, spec string, runFunc jobFunc) (*Job, error) {
+func (mgr *JobMgr) AddJob(desc string, spec string, runFunc JobFunc) (*Job, error) {
 	job := NewJob(mgr, desc, runFunc)
 	id, err := mgr.cron.AddJob(spec, job)
 	if err != nil {

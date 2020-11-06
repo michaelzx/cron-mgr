@@ -22,24 +22,24 @@ const (
 // success/fail
 // ...after
 // after
-type jobFunc func(thisJob *Job) error
-type jobFailFunc func(thisJob *Job, jobErr error)
-type jobSuccessFunc func(thisJob *Job)
+type JobFunc func(thisJob *Job) error
+type JobFailFunc func(thisJob *Job, jobErr error)
+type JobSuccessFunc func(thisJob *Job)
 type Job struct {
 	EntityID       cron.EntryID
 	ID             string    // uuid
 	Desc           string    // 任务描述
 	Status         JobStatus // 状态：1=待执行、2、正在执行
 	NextTime       time.Time
-	beforeFuncList []jobFunc      `json:"-"` // 前置逻辑
-	runFunc        jobFunc        `json:"-"` // 运行逻辑
-	successFunc    jobSuccessFunc `json:"-"`
-	failFunc       jobFailFunc    `json:"-"`
-	afterFuncList  []jobFunc      `json:"-"` // 后置逻辑
+	beforeFuncList []JobFunc      `json:"-"` // 前置逻辑
+	runFunc        JobFunc        `json:"-"` // 运行逻辑
+	successFunc    JobSuccessFunc `json:"-"`
+	failFunc       JobFailFunc    `json:"-"`
+	afterFuncList  []JobFunc      `json:"-"` // 后置逻辑
 	mgr            *JobMgr
 }
 
-func NewJob(mgr *JobMgr, desc string, runFunc jobFunc) *Job {
+func NewJob(mgr *JobMgr, desc string, runFunc JobFunc) *Job {
 	return &Job{
 		ID:      uuid.NewV4().String(),
 		Desc:    desc,
@@ -52,21 +52,21 @@ func NewJob(mgr *JobMgr, desc string, runFunc jobFunc) *Job {
 func (j *Job) GetEntity() cron.Entry {
 	return j.mgr.cron.Entry(j.EntityID)
 }
-func (j *Job) AddBeforeFunc(f jobFunc) {
+func (j *Job) AddBeforeFunc(f JobFunc) {
 	if j.beforeFuncList == nil {
-		j.beforeFuncList = make([]jobFunc, 0, 0)
+		j.beforeFuncList = make([]JobFunc, 0, 0)
 	}
 	j.beforeFuncList = append(j.beforeFuncList, f)
 }
-func (j *Job) OnFail(f jobFailFunc) {
+func (j *Job) OnFail(f JobFailFunc) {
 	j.failFunc = f
 }
-func (j *Job) OnSuccess(f jobSuccessFunc) {
+func (j *Job) OnSuccess(f JobSuccessFunc) {
 	j.successFunc = f
 }
-func (j *Job) AddAfterFunc(f jobFunc) {
+func (j *Job) AddAfterFunc(f JobFunc) {
 	if j.afterFuncList == nil {
-		j.afterFuncList = make([]jobFunc, 0, 0)
+		j.afterFuncList = make([]JobFunc, 0, 0)
 	}
 	j.afterFuncList = append(j.afterFuncList, f)
 }
